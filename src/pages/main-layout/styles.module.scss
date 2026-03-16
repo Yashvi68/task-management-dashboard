@@ -1,0 +1,19 @@
+.mainContainer {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebarContainer {
+  width: 22%;
+  background: rgb(255, 255, 255);
+  padding: 10px 10px 10px 0px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContentContainer {
+  width: 80%;
+  background: #f2f8fd;
+  padding: 20px;
+}

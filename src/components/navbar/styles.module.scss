@@ -1,0 +1,26 @@
+.navContainer {
+    width: 100%;
+    border-bottom: 2px solid #e0e0e0;
+    // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+
+    .navSection {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 20px;
+
+        .pageTitle {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+
+        .userName {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #333;
+            margin: 0;
+        }
+    }
+}
