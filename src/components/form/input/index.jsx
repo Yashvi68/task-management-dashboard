@@ -8,6 +8,8 @@ export const Input = ({
     placeholder,
     register,
     error,
+    min,
+    ...otherProps
 }) => {
     const [showPassword, setShowPassword] = useState(false)
 
@@ -28,6 +30,8 @@ export const Input = ({
                     placeholder={placeholder}
                     className={`${styles.input} ${error ? styles.inputError : ""}`}
                     {...register}
+                    min={min}
+                    {...otherProps}
                 />
                 {isPassword && (
                     <button

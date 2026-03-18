@@ -1,6 +1,9 @@
 import { Navigate } from "react-router-dom";
 import { roles } from "../constants/roles";
 import { MainLayout } from "../pages/main-layout";
+import { LoginPage } from "../pages/auth/login";
+import { RegisterPage } from "../pages/auth/register";
+import ManageTasks from "../pages/users/manage-tasks";
 
 export const Routes = [
     {
@@ -10,13 +13,13 @@ export const Routes = [
     },
     {
         path: "/login",
-        element: <h1>Login Page</h1>,
+        element: <LoginPage />,
         role: [roles.user, roles.admin]
     },
     {
         path: "/register",
-        element: <h1>Register Page</h1>,
-        role: [roles.user, roles.admin]
+        element: <RegisterPage />,
+        role: [roles.user]
     },
     {
         path: "/",
@@ -40,7 +43,7 @@ export const Routes = [
             },
             {
                 path: "manage-tasks",
-                element: <h1>Manage Tasks Page</h1>,
+                element: <ManageTasks />,
                 role: [roles.user]
             },
             {

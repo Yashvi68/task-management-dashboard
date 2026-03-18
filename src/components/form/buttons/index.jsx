@@ -6,6 +6,8 @@ export const Button = ({
     onClick,
     disabled = false,
     isLoading = false,
+    icon,
+    ...otherProps
 }) => {
     return (
         <button
@@ -13,7 +15,9 @@ export const Button = ({
             onClick={onClick}
             disabled={disabled || isLoading}
             className={styles.button}
+            {...otherProps}
         >
+            {icon && <span className={styles.icon}>{icon}</span>}
             {isLoading ? "Loading..." : label}
         </button>
     )

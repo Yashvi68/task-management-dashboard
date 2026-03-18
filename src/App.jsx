@@ -1,7 +1,10 @@
-// import { BrowserRouter } from "react-router-dom"
-// import { NavBar } from "./components/navbar"
-// import { SideBar } from "./components/sidebar"
-// import { MainLayout } from "./pages/main-layout"
+import { BrowserRouter } from "react-router-dom"
+import { NavBar } from "./components/navbar"
+import { SideBar } from "./components/sidebar"
+import { MainLayout } from "./pages/main-layout"
+import { LoginPage } from "./pages/auth/login"
+import { RegisterPage } from "./pages/auth/register"
+import ManageTasks from "./pages/users/manage-tasks"
 
 // function App() {
 
@@ -10,7 +13,10 @@
 // {/* <NavBar /> */}
 // <BrowserRouter>
 // {/* <NavBar /> */}
-// <MainLayout />
+// {/* <MainLayout /> */}
+// {/* <ManageTasks /> */}
+// {/* <LoginPage /> */}
+// {/* <RegisterPage /> */}
 // </BrowserRouter>
 //     </>
 //   )

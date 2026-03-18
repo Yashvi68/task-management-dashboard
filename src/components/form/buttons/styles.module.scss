@@ -1,5 +1,9 @@
 .button {
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     padding: 10px 20px;
     background-color: #1a73e8;
     color: #ffffff;
@@ -17,5 +21,11 @@
     &:disabled {
         background-color: #a0c4f1;
         cursor: not-allowed;
+    }
+
+    .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }

@@ -8,7 +8,7 @@ import { filterByRole } from "../../utils/filterByRole"
 export const SideBar = ()=>{
     const userDetails = useAuthStore((state) => state.userDetails)
     const clearAuth = useAuthStore((state) => state.clearAuth)
-    const role = userDetails?.role ?? roles.admin
+    const role = userDetails?.role ?? roles.user
     const filteredItems = filterByRole(sideBarItems, role)
     return(
         <div className={styles.sidebar}>
