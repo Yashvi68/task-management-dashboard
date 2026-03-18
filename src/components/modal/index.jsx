@@ -34,7 +34,7 @@ const Modal = ({ children }) => {
         {children}
       </div>
     </div>,
-    document.querySelector("#modal")
+    document.getElementById("modal")
   );
 };
 

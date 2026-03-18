@@ -16,7 +16,7 @@ import ManageTasks from "./pages/users/manage-tasks"
 // {/* <MainLayout /> */}
 // {/* <ManageTasks /> */}
 // {/* <LoginPage /> */}
-// {/* <RegisterPage /> */}
+// <RegisterPage />
 // </BrowserRouter>
 //     </>
 //   )
@@ -29,6 +29,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { filterByRole } from "./utils/filterByRole"
 import { Routes } from "./routes"
 import { useAuthStore } from "./zustand-store/auth/authStore"
+import { Toast } from "./components/toast"
 
 function App() {
     const { userDetails } = useAuthStore()
@@ -42,7 +43,13 @@ function App() {
 
     const router = createBrowserRouter(filteredRoutes)
 
-    return <RouterProvider router={router} />
+    return (
+        <>
+        <RouterProvider router={router} />
+        <Toast />
+        </>
+    )
+
 }
 
 export default App

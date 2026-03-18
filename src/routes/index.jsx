@@ -4,6 +4,7 @@ import { MainLayout } from "../pages/main-layout";
 import { LoginPage } from "../pages/auth/login";
 import { RegisterPage } from "../pages/auth/register";
 import ManageTasks from "../pages/users/manage-tasks";
+import Tasks from "../pages/users/tasks";
 
 export const Routes = [
     {
@@ -38,7 +39,7 @@ export const Routes = [
             },
             {
                 path: "tasks",
-                element: <h1>Tasks Page</h1>,
+                element: <Tasks />,
                 role: [roles.user]
             },
             {

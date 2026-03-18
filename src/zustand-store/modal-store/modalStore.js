@@ -1,9 +1,12 @@
 import { create } from "zustand";
 
+const initialState = {
+    isOpen: false,
+    modalType: null,
+    modalData: null,
+}
 export const useModalStore = create((set) => ({
-  isOpen: false,
-  modalType: null,
-  modalData: null,
+    ...initialState,
 
   openModal: (type, data = null) =>
     set({
@@ -13,9 +16,5 @@ export const useModalStore = create((set) => ({
     }),
 
   closeModal: () =>
-    set({
-      isOpen: false,
-      modalType: null,
-      modalData: null,
-    }),
+    set({ ...initialState }),
 }));

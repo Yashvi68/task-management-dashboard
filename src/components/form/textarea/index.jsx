@@ -4,9 +4,9 @@ export const Textarea = ({
   name,
   label,
   placeholder,
-  value,
-  onChange,
+  register,
   error,
+  ...restProps
 }) => {
   return (
     <div className={styles.textareaWrapper}>
@@ -20,8 +20,8 @@ export const Textarea = ({
         name={name}
         placeholder={placeholder}
         className={`${styles.textarea} ${error ? styles.textareaError : ""}`}
-        value={value}
-        onChange={onChange}
+        {...register}
+        {...restProps}
       />
       {error && <p className={styles.errorMessage}>{error}</p>}
     </div>
