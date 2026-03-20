@@ -6,16 +6,24 @@ import { Button } from "../../../components/form/buttons";
 import Modal from "../../../components/modal";
 import { useForm } from "react-hook-form";
 import { Textarea } from "../../../components/form/textarea";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToastStore } from "../../../zustand-store/toast/toastStore";
 import { useTaskStore } from "../../../zustand-store/task/taskStore";
+import { httpPost } from "../../../services/httpPost";
+import { httpPut } from "../../../services/httpPut";
+import { httpDelete } from "../../../services/httpDelete";
+import { api } from "../../../config/endpoints";
 
 const ManageTasks = () => {
   const { openModal, closeModal, modalType, modalData } = useModalStore();
   const [isSaving, setIsSaving] = useState(false);
   const { addToast } = useToastStore()
-  const { tasks, addTask, updateTask, deleteTask } = useTaskStore()
+  const { tasks, fetchTasks, loading, error } = useTaskStore()
   const [expandedTasks, setExpandedTasks] = useState({});
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
 
   const onSubmit = async (data) => {
     setIsSaving(true);
@@ -24,25 +32,45 @@ const ManageTasks = () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       if (modalType === MODAL_TYPES.CREATE_TASK) {
-        addTask({
-          id: Date.now(),
-          ...data,
-          status: "Pending",
-        });
+        // console.log("API URL:", api?.createTask);
+        const response = await httpPost(api?.createTask, data);
 
-        addToast("Task created successfully", "success");
+        if (response.success) {
+          fetchTasks();
+
+          addToast("Task created successfully", "success");
+          // console.log("SUBMIT WORKING", data);
+          reset();
+          closeModal();
+        } else {
+          addToast(
+            response.data?.message || "Failed to create task",
+            "error"
+          );
+        }
       }
 
       if (modalType === MODAL_TYPES.EDIT_TASK) {
-        updateTask(modalData.id, data);
+        const response = await httpPut(api.updateTask(modalData._id), data);
 
-        addToast("Task updated successfully", "success");
+        if (response.success) {
+          fetchTasks();
+
+          addToast("Task updated successfully", "success");
+          reset();
+          closeModal();
+        } else {
+          addToast(
+            response.data?.message || "Failed to update task",
+            "error"
+          );
+        }
       }
 
-      reset();
-      closeModal();
+
 
     } catch (error) {
+      console.error("CREATE TASK ERROR:", error);
       addToast("Something went wrong", "error");
     } finally {
       setIsSaving(false);
@@ -60,19 +88,29 @@ const ManageTasks = () => {
     openModal(MODAL_TYPES.CREATE_TASK);
   };
 
-  const handleStatusChange = (task, newStatus) => {
+  const handleStatusChange = async (task, newStatus) => {
     if (newStatus === "Completed") {
       openModal(MODAL_TYPES.COMPLETE_TASK, task);
       return;
     }
 
-    updateTask(task.id, { status: newStatus });
+    const response = await httpPut(api.updateTask(task._id), { status: newStatus });
+    if (response.success) {
+      fetchTasks();
+    } else {
+      addToast(response.data?.message || "Failed to update status", "error");
+    }
   };
 
-  const confirmComplete = () => {
-    updateTask(modalData.id, { status: "Completed" });
-    addToast("Task marked as completed", "success");
-    closeModal();
+  const confirmComplete = async () => {
+    const response = await httpPut(api.updateTask(modalData._id), { status: "Completed" });
+    if (response.success) {
+      fetchTasks();
+      addToast("Task marked as completed", "success");
+      closeModal();
+    } else {
+      addToast(response.data?.message || "Failed to complete task", "error");
+    }
   };
 
   const handleEdit = (task) => {
@@ -90,10 +128,15 @@ const ManageTasks = () => {
     openModal(MODAL_TYPES.EDIT_TASK, task);
   };
 
-  const confirmDelete = () => {
-    deleteTask(modalData.id);
-    addToast("Task deleted successfully", "success");
-    closeModal();
+  const confirmDelete = async () => {
+    const response = await httpDelete(api.deleteTask(modalData._id));
+    if (response.success) {
+      fetchTasks();
+      addToast("Task deleted successfully", "success");
+      closeModal();
+    } else {
+      addToast(response.data?.message || "Failed to delete task", "error");
+    }
   };
 
   const handleDelete = (task) => {
@@ -111,9 +154,10 @@ const ManageTasks = () => {
 
   return (
     <div className={styles.container}>
+      {loading && <p>Loading tasks...</p>}
+      {error && <p>Error: {error}</p>}
 
       <div className={styles.header}>
-        <h2>Manage Tasks</h2>
 
         <Button
           label="Create Task"
@@ -123,13 +167,13 @@ const ManageTasks = () => {
 
       <div className={styles.tasksWrapper}>
         {tasks.map((task) => (
-          <div key={task.id} className={styles.card}>
+          <div key={task._id} className={styles.card}>
             <h3>{task.title}</h3>
 
             <div>
               <p
                 className={
-                  expandedTasks[task.id]
+                  expandedTasks[task._id]
                     ? styles.descriptionExpanded
                     : styles.descriptionCollapsed
                 }
@@ -140,9 +184,9 @@ const ManageTasks = () => {
               {task.description.length > 80 && (
                 <span
                   className={styles.seeMore}
-                  onClick={() => toggleExpand(task.id)}
+                  onClick={() => toggleExpand(task._id)}
                 >
-                  {expandedTasks[task.id] ? "See less" : "See more"}
+                  {expandedTasks[task._id] ? "See less" : "See more"}
                 </span>
               )}
             </div>
@@ -182,7 +226,7 @@ const ManageTasks = () => {
       <Modal>
         {(modalType === MODAL_TYPES.CREATE_TASK ||
           modalType === MODAL_TYPES.EDIT_TASK) && (
-            <div className={styles.modalContent}>
+            <form onSubmit={handleSubmit(onSubmit)} className={styles.modalContent}>
               <h3> {modalType === MODAL_TYPES.EDIT_TASK ? "Edit Task" : "Create Task"}</h3>
 
               <Input
@@ -221,11 +265,11 @@ const ManageTasks = () => {
                 <Button
                   label="Save"
                   type="submit"
-                  onClick={handleSubmit(onSubmit)}
+                  // onClick={handleSubmit(onSubmit)}
                   isLoading={isSaving}
                 />
               </div>
-            </div>
+            </form>
           )}
 
         {modalType === MODAL_TYPES.DELETE_TASK && (
